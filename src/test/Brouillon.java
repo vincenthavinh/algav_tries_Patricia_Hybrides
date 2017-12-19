@@ -5,6 +5,7 @@ import triepatricia.*;
 public class Brouillon {
 
 	public static void main(String[] args) {
+		
 		TriePatricia p = new TriePatricia();
 		p.ajout("babar");
 		

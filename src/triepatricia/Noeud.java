@@ -2,26 +2,31 @@ package triepatricia;
 
 public class Noeud {
 
-	private String valeur;
-	private Boolean estFeuille;
+	private StringBuilder arcParent;
 	private Noeud[] fils;
 	
 	public Noeud() {
-		fils = new Noeud[128];
-		estFeuille = false;
+		fils = new Noeud[TriePatricia.tailleAlphabet];
 	}
-
-	public String getValeur() {
-		return valeur;
+	
+	public Boolean estFeuille() {
+		return (arcParent.charAt(arcParent.length()-1) == TriePatricia.charFin ||
+				fils[TriePatricia.charFin] != null);
 	}
 	
 	public Noeud getFils(int i) {
 		return fils[i];
 	}
 	
-	public void ajoutFils(String valeur, Boolean motFini) {
-		this.fils[valeur.charAt(0)] = new Noeud();
-		this.fils[valeur.charAt(0)].valeur = valeur;
-		this.estFeuille = motFini;
+	public void setFils(int i, Noeud enfant) {
+		fils[i] = enfant;
+	}
+	
+	public StringBuilder getArcParent() {
+		return arcParent;
+	}
+	
+	public void setArcParent(StringBuilder arcParent) {
+		this.arcParent = arcParent;
 	}
 }
