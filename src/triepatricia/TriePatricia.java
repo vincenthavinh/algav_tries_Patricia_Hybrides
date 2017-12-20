@@ -17,14 +17,6 @@ public class TriePatricia {
 		StringBuilder sb = new StringBuilder(mot);
 		sb.append(charFin); //on ajoute le charFin a la fin du mot a inserer
 		
-		/*Cas ou le triePatricia n'a pas d'entree commencant par la premiere lettre du mot a inserer*/
-		if (racine.fils[sb.charAt(0)] == null) {
-			
-			Noeud n = new Noeud(sb, new Noeud[tailleAlphabet]);
-			racine.fils[sb.charAt(0)] = n;
-		}	
-		/*Autres cas*/
-		else
 		racine.fils[sb.charAt(0)] = ajoutRecursif(sb, racine.fils[sb.charAt(0)]);
 	}
 	
@@ -100,4 +92,24 @@ public class TriePatricia {
 		}
 	}
 	
+	public boolean recherche(String mot) {
+		StringBuilder sb = new StringBuilder(mot);
+
+		return rechercheRecursive(sb, racine);
+	}
+	
+	private boolean rechercheRecursive(StringBuilder sb, Noeud noeudActuel) {
+		
+		/*toutes les lettres du mot on ete trouvees ET le noeudActuel est bien une feuille*/
+		if(noeudActuel.estFeuille() && sb.length() == 0) {
+			return true;
+		}
+		
+		/*toutes les lettres du mot on ete trouvees mais le noeudActuel n'est pas une feuille*/
+		if(!noeudActuel.estFeuille() && sb.length() == 0) {
+			return false;
+		}
+	
+		return false;
+	}
 }
