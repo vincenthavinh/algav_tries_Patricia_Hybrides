@@ -42,7 +42,6 @@ public class TriePatricia {
 			/*CAS TERMINAL : le mot est deja contenu dans le trie*/
 			if(i == sb.length()) {
 				/*NE RIEN FAIRE*/
-				System.out.println("mot "+sb+" deja dedans");
 				return noeudActuel;
 			}
 	
@@ -95,21 +94,35 @@ public class TriePatricia {
 	public boolean recherche(String mot) {
 		StringBuilder sb = new StringBuilder(mot);
 
-		return rechercheRecursive(sb, racine);
+		return rechercheRecursive(sb, racine.fils[sb.charAt(0)]);
 	}
 	
 	private boolean rechercheRecursive(StringBuilder sb, Noeud noeudActuel) {
 		
-		/*toutes les lettres du mot on ete trouvees ET le noeudActuel est bien une feuille*/
+		/*CAS TERMINAL : Le noeud actuel n'existe pas. aucune lettre du mot n'a ete trouvee*/
+		if(noeudActuel == null) {
+			return false;
+		}
+		
+		/*On compare les lettres du mot recherche a l'etiquette du noeud actuel*/
+		int i = 0;
+		while(i<sb.length() && i<noeudActuel.arcParent.length() && noeudActuel.arcParent.charAt(i)==sb.charAt(i)) {
+			i++;
+		}
+		sb.delete(0, i); //on retire les lettres communes entre le mot recherche et le noeud actuel
+		
+		/*CAS TERMINAL : toutes les lettres du mot on ete trouvees ET le noeudActuel est bien une feuille*/
 		if(noeudActuel.estFeuille() && sb.length() == 0) {
 			return true;
 		}
 		
-		/*toutes les lettres du mot on ete trouvees mais le noeudActuel n'est pas une feuille*/
+		/*CAS TERMINAL : toutes les lettres du mot on ete trouvees mais le noeudActuel n'est pas une feuille*/
 		if(!noeudActuel.estFeuille() && sb.length() == 0) {
 			return false;
 		}
-	
-		return false;
+		
+		/*CAS RECURSIF : toutes les lettres n'ont pas ete trouvees.
+		 * On recherche recursivement le reste du mot dans la case correspondante du tableau des fils du noeudActuel*/
+		return rechercheRecursive(sb, noeudActuel.fils[sb.charAt(0)]);
 	}
 }

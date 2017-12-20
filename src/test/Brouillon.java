@@ -20,7 +20,10 @@ public class Brouillon {
 		System.out.println("\najout bonsoir");
 		p.ajout("bonsoir");
 		System.out.println("\najout bonjourno");
-		p.ajout("bonjourno");*/
+		p.ajout("bonjourno");
+		
+		System.out.println("\n");
+		Outils.afficher(p.racine, 0);*/
 		
 		/*TEST2*/
 		String s = "A quel genial professeur de dactylographie sommes nous redevables de la superbe phrase ci dessous, "
@@ -32,6 +35,13 @@ public class Brouillon {
 		
 		System.out.println("\n");
 		Outils.afficher(p.racine, 0);
+		
+		System.out.println("\nrecherche \"wally\": "+p.recherche("wally"));
+		System.out.println("recherche \"genial\": "+p.recherche("genial"));
+		System.out.println("recherche \"un\": "+p.recherche("un"));
+		System.out.println("recherche \"dessous\": "+p.recherche("dessous"));
+		System.out.println("recherche \"dactylo\": "+p.recherche("dactylo"));
+		System.out.println("recherche \"que\": "+p.recherche("que"));
 	}
 
 }
