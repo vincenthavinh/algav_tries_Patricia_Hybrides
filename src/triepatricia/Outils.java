@@ -10,7 +10,7 @@ public abstract class Outils {
 		s.append(toString(n));
 		System.out.println(s.toString());
 		d+=1;
-		for(int i = 0; i<128; i++) {
+		for(int i = TriePatricia.debutAlphabet; i<= TriePatricia.finAlphabet; i++) {
 			if(n.fils[i] != null) afficher(n.fils[i], d);
 		}
 	}
@@ -18,7 +18,7 @@ public abstract class Outils {
 	/*Affiche l'attribut valeur du noeud, et le tableau de ses noeuds fils NON VIDES*/
 	public static String toString(Noeud n) {
 		StringBuilder s = new StringBuilder(n.arcParent + " {");
-		for(int i=0; i<128; i++) {
+		for(int i = TriePatricia.debutAlphabet; i<= TriePatricia.finAlphabet; i++) {
 			if(n.fils[i] != null) {
 				s.append(n.fils[i].arcParent);
 				s.append(" ");

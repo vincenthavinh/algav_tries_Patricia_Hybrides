@@ -15,6 +15,9 @@ public class TriePatricia {
 
 	public void ajout(String mot) {
 		StringBuilder sb = new StringBuilder(mot);
+		
+		if(sb.length() == 0) return; //cas mot vide
+		
 		sb.append(charFin); //on ajoute le charFin a la fin du mot a inserer
 		
 		racine.fils[sb.charAt(0)] = ajoutRecursif(sb, racine.fils[sb.charAt(0)]);
@@ -50,8 +53,9 @@ public class TriePatricia {
 			 * on cree deux nouveaux noeuds contenant l'un le suffix du mot a inserer,
 			 * l'autre le suffixe du noeud actuel et le tableau des fils du noeudActuel.
 			 * Puis on transforme le noeud actuel en noeud prefixe, en lui donnant le prefixe et un tableau de fils vide.
-			 * Enfin on ajoute au tableau des fils du noeud prefixe les deux nouveaux noeuds suffixes crees.*/
-			if(i < sb.length() && i < noeudActuel.arcParent.length()) {
+			 * Enfin on ajoute au tableau des fils du noeud prefixe les deux nouveaux noeuds suffixes crees.
+			 */
+			else if(i < noeudActuel.arcParent.length()) {
 	
 				/*creation du noeud suffixe de noeudActuel*/
 				StringBuilder suffixeNoeudAc = new StringBuilder();
@@ -77,28 +81,32 @@ public class TriePatricia {
 			}
 			
 			/*CAS RECURSIF : le noeud Actuel est un prefixe du mot a inserer
-			 * On ajoute recursivement le suffixe du mot dans la case correpondante du tableau des fils du noeudActuel*/
-			if(i < sb.length() && i == noeudActuel.arcParent.length()) {
+			 * On ajoute recursivement le suffixe du mot dans la case correpondante du tableau des fils du noeudActuel
+			 */
+			else if(i == noeudActuel.arcParent.length()) {
 				
 				sb.delete(0, i); //on supprime ce prefixe du mot a inserer
 				noeudActuel.fils[sb.charAt(0)] = ajoutRecursif(sb, noeudActuel.fils[sb.charAt(0)]);
 				return noeudActuel;
 			}
 			
-			
-			
-			return new Noeud(new StringBuilder("ERREUR"), new Noeud[tailleAlphabet]);
+			/*CAS OUBLIE ? erreur*/
+			else {
+				return new Noeud(new StringBuilder("ERREUR"), new Noeud[tailleAlphabet]);
+			}
 		}
 	}
 	
+	
 	public boolean recherche(String mot) {
 		StringBuilder sb = new StringBuilder(mot);
+		
+		if(sb.length() == 0) return false; //cas mot vide
 
 		return rechercheRecursive(sb, racine.fils[sb.charAt(0)]);
 	}
 	
 	private boolean rechercheRecursive(StringBuilder sb, Noeud noeudActuel) {
-		
 		/*CAS TERMINAL : Le noeud actuel n'existe pas. aucune lettre du mot n'a ete trouvee*/
 		if(noeudActuel == null) {
 			return false;
@@ -109,20 +117,131 @@ public class TriePatricia {
 		while(i<sb.length() && i<noeudActuel.arcParent.length() && noeudActuel.arcParent.charAt(i)==sb.charAt(i)) {
 			i++;
 		}
-		sb.delete(0, i); //on retire les lettres communes entre le mot recherche et le noeud actuel
 		
-		/*CAS TERMINAL : toutes les lettres du mot on ete trouvees ET le noeudActuel est bien une feuille*/
-		if(noeudActuel.estFeuille() && sb.length() == 0) {
-			return true;
-		}
-		
-		/*CAS TERMINAL : toutes les lettres du mot on ete trouvees mais le noeudActuel n'est pas une feuille*/
-		if(!noeudActuel.estFeuille() && sb.length() == 0) {
-			return false;
+		/*toutes les lettres du mot ont ete trouvees*/
+		if(i == sb.length()) {
+			
+			/*CAS TERMINAl : le mot appartient au trie :
+			 * - le noeudActuel a la meme taille que le mot recherche, et a un noeud fils "fin de mot"
+			 * OU
+			 * - le noeudActuel a la taille du mot recherche +1 char, et son dernier char est le char de fin.
+			 */
+			if((noeudActuel.arcParent.length() == sb.length() && noeudActuel.fils[charFin] != null) ||
+					(noeudActuel.arcParent.length() == sb.length()+1 && noeudActuel.arcParent.charAt(sb.length()) == charFin)) {
+				return true;
+			}
+			
+			/*CAS TERMINAL : le mot n'appartient pas au trie :
+			 * - le noeudActuel n'est pas une feuille
+			 * OU
+			 * - le noeudActuel a pour prefixe le mot recherche mais n'est pas ce mot
+			 */
+			else {
+				return false;
+			}
 		}
 		
 		/*CAS RECURSIF : toutes les lettres n'ont pas ete trouvees.
-		 * On recherche recursivement le reste du mot dans la case correspondante du tableau des fils du noeudActuel*/
-		return rechercheRecursive(sb, noeudActuel.fils[sb.charAt(0)]);
+		 * On recherche recursivement le reste du mot dans la case correspondante du tableau des fils du noeudActuel
+		 */
+		else{
+			sb.delete(0, i); //on retire les lettres communes entre le mot recherche et le noeud actuel
+			return rechercheRecursive(sb, noeudActuel.fils[sb.charAt(0)]);
+		}
+		
+	}
+	
+	
+	public boolean suppression(String mot) {
+		StringBuilder sb = new StringBuilder(mot);
+		
+		if(sb.length() == 0) return false; //cas mot vide
+		
+		return suppressionRecursive(sb,racine.fils[sb.charAt(0)] , racine);
+	}
+	
+	private boolean suppressionRecursive(StringBuilder sb, Noeud noeudActuel, Noeud noeudParent) {
+		/*CAS TERMINAL : ERREUR ! le mot n'est pas dans le trie*/
+		if(noeudActuel == null) {
+			return false;
+		}
+		
+		/*On compare les lettres du mot recherche a l'etiquette du noeud actuel*/
+		int i = 0;
+		while(i<sb.length() && i<noeudActuel.arcParent.length() && noeudActuel.arcParent.charAt(i)==sb.charAt(i)) {
+			i++;
+		}
+		
+		/*toutes les lettres du mot ont ete trouvees*/
+		if(i == sb.length()) {
+			
+			/*CAS TERMINAL : le noeudActuel a la meme taille que le mot recherche, et a un noeud fils "fin de mot": 
+			 * on supprime son noeud fils "fin de mot".
+			 * Puis, s'il ne reste qu'un seul fils au noeudActuel, on les fusionne.
+			 */
+			if(noeudActuel.arcParent.length() == sb.length() && noeudActuel.fils[charFin] != null) {
+				noeudActuel.fils[TriePatricia.charFin] = null;
+				noeudActuel = fusionParentFilsUnique(noeudActuel);
+				return true;
+			}
+			
+			/*CAS TERMINAL : le noeudActuel a la taille du mot recherche +1 char, et son dernier char est le char de fin:
+			 * on supprime le noeudActuel.
+			 * Puis, s'il ne reste qu'un seul fils au noeudparent, on les fusionne.
+			 */
+			else if(noeudActuel.arcParent.length() == sb.length()+1 && noeudActuel.arcParent.charAt(sb.length()) == charFin) {
+				noeudParent.fils[noeudActuel.arcParent.charAt(0)] = null;
+				noeudParent = fusionParentFilsUnique(noeudParent);
+				return true;
+			}
+			
+			/*CAS TERMINAL : le mot n'appartient pas au trie : on ne peut pas le supprimer.*/
+			else {
+				return false;
+			}
+		}
+		
+		/*CAS RECURSIF : toutes les lettres n'ont pas ete trouvees.
+		 * On recherche recursivement le reste du mot a supprimer dans la case correspondante du tableau des fils du noeudActuel
+		 */
+		else {
+			sb.delete(0, i); //on retire les lettres communes entre le mot recherche et le noeud actuel
+			return suppressionRecursive(sb, noeudActuel.fils[sb.charAt(0)], noeudActuel);
+		}
+	}
+	
+	
+	/*verifie le nombre de fils du noeudParent. S'il n'a qu'un seul fils, les fusionne de la sorte :
+	 * Concatene le suffixe du noeudFils au mot du parent.
+	 * remplace le tableau des fils du noeudParent par celui du noeudFils.
+	 */
+	private Noeud fusionParentFilsUnique(Noeud noeudParent) {
+		/*exception : le noeudParent est la racine : Pas de fusion avec un unique fils !
+		 *la racine n'aura jamais de préfixe commun pour laisser accessibles les autres lettres de l'alphabet*/
+		if(noeudParent.arcParent == null) {
+			return noeudParent;
+		}
+		
+		/*on compte le nombre de fils du noeud parent*/
+		int enfantsRestants = 0;
+		for(Noeud node : noeudParent.fils ) {
+			if (node != null) {
+				enfantsRestants ++;
+			}
+		}
+		
+		/*s'il ne reste qu'un fils, on fusionne parent et fils*/
+		if(enfantsRestants == 1) {
+			Noeud enfantUnique = null;;
+			for(Noeud node : noeudParent.fils ) {
+				if (node != null) {
+					enfantUnique = node;
+				}
+			}
+			noeudParent.arcParent.append(enfantUnique.arcParent);
+			noeudParent.fils = enfantUnique.fils;
+		}
+		
+		return noeudParent;
 	}
 }
