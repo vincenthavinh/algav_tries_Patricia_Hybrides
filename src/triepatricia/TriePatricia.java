@@ -16,7 +16,10 @@ public class TriePatricia {
 	public void ajout(String mot) {
 		StringBuilder sb = new StringBuilder(mot);
 		
-		if(sb.length() == 0) return; //cas mot vide
+		if(sb.length() == 0) {
+			System.out.println("mot a inserer vide !");
+			return; //cas mot vide
+		}
 		
 		sb.append(charFin); //on ajoute le charFin a la fin du mot a inserer
 		
@@ -50,7 +53,7 @@ public class TriePatricia {
 	
 	
 			/*CAS RECURSIF : le mot et le noeud actuel ont un prefixe en commun
-			 * on cree deux nouveaux noeuds contenant l'un le suffix du mot a inserer,
+			 * on cree deux nouveaux noeuds contenant l'un le suffixe du mot a inserer,
 			 * l'autre le suffixe du noeud actuel et le tableau des fils du noeudActuel.
 			 * Puis on transforme le noeud actuel en noeud prefixe, en lui donnant le prefixe et un tableau de fils vide.
 			 * Enfin on ajoute au tableau des fils du noeud prefixe les deux nouveaux noeuds suffixes crees.
@@ -101,7 +104,10 @@ public class TriePatricia {
 	public boolean recherche(String mot) {
 		StringBuilder sb = new StringBuilder(mot);
 		
-		if(sb.length() == 0) return false; //cas mot vide
+		if(sb.length() == 0) {
+			System.out.println("mot a rechercher vide !");
+			return false; //cas mot vide
+		}
 
 		return rechercheRecursive(sb, racine.fils[sb.charAt(0)]);
 	}
@@ -155,7 +161,10 @@ public class TriePatricia {
 	public boolean suppression(String mot) {
 		StringBuilder sb = new StringBuilder(mot);
 		
-		if(sb.length() == 0) return false; //cas mot vide
+		if(sb.length() == 0) {
+			System.out.println("mot a supprimer vide !");
+			return false; //cas mot vide
+		}
 		
 		return suppressionRecursive(sb,racine.fils[sb.charAt(0)] , racine);
 	}
@@ -210,7 +219,6 @@ public class TriePatricia {
 		}
 	}
 	
-	
 	/*verifie le nombre de fils du noeudParent. S'il n'a qu'un seul fils, les fusionne de la sorte :
 	 * Concatene le suffixe du noeudFils au mot du parent.
 	 * remplace le tableau des fils du noeudParent par celui du noeudFils.
@@ -243,5 +251,41 @@ public class TriePatricia {
 		}
 		
 		return noeudParent;
+	}
+	
+	
+	public int comptageMots() {
+		int nbMots = 0;
+		
+		/*on boucle sur tout le tableau de noeuds fils de la racine*/
+		for (Noeud n : racine.fils) {
+			nbMots += comptageMotsRecursif(n, "");
+		}
+		return nbMots;
+	}
+	
+	public int comptageMotsRecursif(Noeud noeudActuel, String sb) {
+		
+		/*CAS TERMINAL : noeud non existant*/
+		if(noeudActuel == null) {
+			return 0;
+		}
+		
+		int nbMotsNoeudActuel = 0;
+		sb += noeudActuel.arcParent;
+		
+		/*CAS TERMINAL : le noeud actuel marque une fin de mot.
+		 * Ce cas comprend les noeuds dont la fin de mot est a la fin d'un suffixe unique,
+		 * et les noeuds "marque de fin de mot" qui sont fils de mots prefixes.*/
+		if(noeudActuel.arcParent.charAt(noeudActuel.arcParent.length()-1) == charFin) {
+			nbMotsNoeudActuel ++;
+		}
+		
+		/*CAS RECURSIF : on boucle sur le tableau de fils du noeud actuel*/
+		for (Noeud n : noeudActuel.fils) {
+			nbMotsNoeudActuel += comptageMotsRecursif(n, sb);
+		}
+		
+		return nbMotsNoeudActuel;
 	}
 }

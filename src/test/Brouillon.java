@@ -9,10 +9,10 @@ public class Brouillon {
 		TriePatricia p = new TriePatricia();
 		
 		/*TEST1 : Ajouts simples*/
-		/*p.ajout("test");
+		/*System.out.println("\najout test");
+		p.ajout("test");
+		System.out.println("\najout bonjour");
 		p.ajout("bonjour");
-
-		
 		System.out.println("\najout bonjourjour");
 		p.ajout("bonjourjour");
 		System.out.println("ajout bon");
@@ -68,7 +68,11 @@ public class Brouillon {
 		System.out.println("\nrecherche mot ["+"de"+"] : "+p.recherche("de"));
 		System.out.println("recherche mot ["+"des"+"] : "+p.recherche("des"));*/
 		
-		
+		/*TEST5 : comptage Mot*/
+		System.out.println("\nnbMots dans la phrase = "+tab.length);
+		System.out.println("nbMots (uniques) dans le trie patricia = "+p.comptageMots());
+		System.out.println("\n(pensez a soustraire les mots vides non inseres et les mots"
+				+ " doublons inseres une seule fois de nbMots dans la phrase)");
 	}
 
 }
