@@ -23,7 +23,7 @@ public class MesureTemps {
 		long nbSuppressions = 0;
 		long nbNanosSuppressions = 0;
 		
-		for(int i=0; i<10; i++) {
+		for(int i=0; i<5; i++) {
 			for(File file : listOfFiles) {
 				if (file.isFile()) {
 					//System.out.println(file.getName());
