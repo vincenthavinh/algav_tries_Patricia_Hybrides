@@ -1,5 +1,7 @@
 package test;
 
+import java.util.List;
+
 import triepatricia.*;
 
 public class Brouillon {
@@ -69,10 +71,20 @@ public class Brouillon {
 		System.out.println("recherche mot ["+"des"+"] : "+p.recherche("des"));*/
 		
 		/*TEST5 : comptage Mot*/
-		System.out.println("\nnbMots dans la phrase = "+tab.length);
-		System.out.println("nbMots (uniques) dans le trie patricia = "+p.comptageMots());
+		System.out.println("\nTABLEAU STRING.SPLIT() : nbMots dans la phrase = "+tab.length);
+		System.out.println("COMPTAGEMOTS : nbMots (uniques) dans le trie patricia = "+p.comptageMots());
 		System.out.println("\n(pensez a soustraire les mots vides non inseres et les mots"
-				+ " doublons inseres une seule fois de nbMots dans la phrase)");
+				+ " doublons inseres une seule fois de nbMots dans la phrase)\n ");
+		
+		/*TEST6 : liste Mots*/
+		System.out.println("LISTEMOTS : ");
+		List<String> l = p.ListeMots();
+		int nbMotsListe = 0;
+		for(String str : l) {
+			nbMotsListe++;
+			//System.out.println(str);
+		}
+		System.out.println(l+"\nnb mots liste : "+nbMotsListe);
 	}
 
 }

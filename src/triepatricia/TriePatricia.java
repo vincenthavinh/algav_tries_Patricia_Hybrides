@@ -262,12 +262,12 @@ public class TriePatricia {
 		
 		/*on boucle sur tout le tableau de noeuds fils de la racine*/
 		for (Noeud n : racine.fils) {
-			nbMots += comptageMotsRecursif(n, "");
+			nbMots += comptageMotsRecursif(n);
 		}
 		return nbMots;
 	}
 	
-	private int comptageMotsRecursif(Noeud noeudActuel, String sb) {
+	private int comptageMotsRecursif(Noeud noeudActuel) {
 		
 		/*CAS TERMINAL : noeud non existant*/
 		if(noeudActuel == null) {
@@ -275,7 +275,6 @@ public class TriePatricia {
 		}
 		
 		int nbMotsNoeudActuel = 0;
-		sb += noeudActuel.arcParent;
 		
 		/*CAS TERMINAL : le noeud actuel marque une fin de mot.
 		 * Ce cas comprend les noeuds dont la fin de mot est a la fin d'un suffixe unique,
@@ -286,7 +285,7 @@ public class TriePatricia {
 		
 		/*CAS RECURSIF : on boucle sur le tableau de fils du noeud actuel*/
 		for (Noeud n : noeudActuel.fils) {
-			nbMotsNoeudActuel += comptageMotsRecursif(n, sb);
+			nbMotsNoeudActuel += comptageMotsRecursif(n);
 		}
 		
 		return nbMotsNoeudActuel;
@@ -294,13 +293,42 @@ public class TriePatricia {
 
 	
 	public List<String> ListeMots(){
-		List<String> resultat = new ArrayList<String>();
+		List<String> listeMots = new ArrayList<String>();
 		
-		return resultat;
+		/*on boucle sur tout le tableau de noeuds fils de la racine*/
+		for (Noeud n : racine.fils) {
+			listeMots = listerRecursif(n, "", listeMots);
+		}
+		
+		return listeMots;
 	}
 	
-	private List<String> ListerRecursif(Noeud n, List<String> liste){
+	private List<String> listerRecursif(Noeud noeudActuel, String prefixe, List<String> liste){
 			
+		/*CAS TERMINAL : noeud non existant*/
+		if(noeudActuel == null) {
+			return liste;
+		}
+		
+		/*On ajoute les lettres du noeud actuel a notre mot en construction*/
+		prefixe += noeudActuel.arcParent;
+		
+		if(noeudActuel.arcParent.charAt(noeudActuel.arcParent.length()-1) == charFin) {
+			prefixe = prefixe.substring(0, prefixe.length()-1);
+		}
+		
+		/*CAS TERMINAL : le noeud actuel marque une fin de mot.
+		 * Ce cas comprend les noeuds dont la fin de mot est a la fin d'un suffixe unique,
+		 * et les noeuds "marque de fin de mot" qui sont fils de mots prefixes.*/
+		if(noeudActuel.arcParent.charAt(noeudActuel.arcParent.length()-1) == charFin) {
+			liste.add(prefixe);
+		}
+		
+		/*CAS RECURSIF : on boucle sur le tableau de fils du noeud actuel*/
+		for (Noeud n : noeudActuel.fils) {
+			liste = listerRecursif(n, prefixe, liste);
+		}
+		
 		return liste;
 	}
 }

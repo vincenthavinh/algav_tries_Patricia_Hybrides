@@ -5,9 +5,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.concurrent.locks.Lock;
-
-import triepatricia.Outils;
 import triepatricia.TriePatricia;
 
 public class MesureTemps {
