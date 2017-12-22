@@ -1,5 +1,8 @@
 package triepatricia;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class TriePatricia {
 	
 	public static final char charFin = (char) 1;
@@ -14,13 +17,13 @@ public class TriePatricia {
 	}
 
 	public void ajout(String mot) {
-		StringBuilder sb = new StringBuilder(mot);
+		StringBuilder sb = new StringBuilder(mot.toLowerCase());
 		
 		if(sb.length() == 0) {
 			System.out.println("mot a inserer vide !");
 			return; //cas mot vide
 		}
-		
+
 		sb.append(charFin); //on ajoute le charFin a la fin du mot a inserer
 		
 		racine.fils[sb.charAt(0)] = ajoutRecursif(sb, racine.fils[sb.charAt(0)]);
@@ -102,7 +105,7 @@ public class TriePatricia {
 	
 	
 	public boolean recherche(String mot) {
-		StringBuilder sb = new StringBuilder(mot);
+		StringBuilder sb = new StringBuilder(mot.toLowerCase());
 		
 		if(sb.length() == 0) {
 			System.out.println("mot a rechercher vide !");
@@ -159,7 +162,7 @@ public class TriePatricia {
 	
 	
 	public boolean suppression(String mot) {
-		StringBuilder sb = new StringBuilder(mot);
+		StringBuilder sb = new StringBuilder(mot.toLowerCase());
 		
 		if(sb.length() == 0) {
 			System.out.println("mot a supprimer vide !");
@@ -264,7 +267,7 @@ public class TriePatricia {
 		return nbMots;
 	}
 	
-	public int comptageMotsRecursif(Noeud noeudActuel, String sb) {
+	private int comptageMotsRecursif(Noeud noeudActuel, String sb) {
 		
 		/*CAS TERMINAL : noeud non existant*/
 		if(noeudActuel == null) {
@@ -287,5 +290,17 @@ public class TriePatricia {
 		}
 		
 		return nbMotsNoeudActuel;
+	}
+
+	
+	public List<String> ListeMots(){
+		List<String> resultat = new ArrayList<String>();
+		
+		return resultat;
+	}
+	
+	private List<String> ListerRecursif(Noeud n, List<String> liste){
+			
+		return liste;
 	}
 }
